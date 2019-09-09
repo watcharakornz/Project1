@@ -20,12 +20,12 @@ class Database
             $this->conn = new PDO("mysql:host=" . $this->host . ";dbname=" . $this->db_name, $this->username, $this->password);
             $this->conn->exec("set names utf8");
         } catch (PDOException $exception) {
-            http_response_code(500);
+            http_response_code($this->code['failed']);
             echo stripslashes(
                 json_encode(
                     array(
                         "status" => "failed",
-                        "status_code" => 500,
+                        "status_code" => $this->code['failed'],
                         "description" => $exception->getMessage(),
                         "data" => null,
                     )
