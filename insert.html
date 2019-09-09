@@ -1,0 +1,125 @@
+<!-- CSS Bootstrap -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+      integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<div class="container">
+    <form class="form-inline">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label for="name">ชื่อ : </label>
+                    <input type="text" name="name" id="name" class="form-control" required>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label for="surename">นามสกุล : </label>
+                    <input type="text" name="surename" id="surename" class="form-control" required>
+                </div>
+            </div>
+        </div> <!--/.row-->
+
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label for="sex">เพศ : </label>
+                    <input type="radio" name="sex" value="M" required> ชาย
+                    <input type="radio" name="sex" value="F"> หญิง
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label for="birthdtm">วันเกิด : </label>
+                    <input type="date" name="birthdtm" id="birthdtm" class="form-control" required>
+                </div>
+            </div>
+        </div> <!--/.row-->
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label for="email">Email : </label>
+                    <input type="email" name="email" id="email" class="form-control" required>
+                </div>
+            </div>
+        </div> <!--/.row-->
+
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label for="address">ที่อยู่ : </label>
+                    <input type="text" name="address" id="address" class="form-control" required>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label for="telephone">เบอร์โทรศัพท์ : </label>
+                    <input type="tel" name="telephone" id="telephone" class="form-control" required>
+                </div>
+            </div>
+        </div> <!--/.row-->
+
+        <div class="row">
+            <input type="submit" class="btn btn-success">
+        </div> <!--/.row-->
+    </form>
+
+    <div class="row" id="resultAPI"></div>
+</div>
+
+<!-- JS Jquery -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+        crossorigin="anonymous"></script>
+
+<!-- JS Bootstrap -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+
+<script>
+    'use strict';
+
+    $("form").submit(function (event) {
+
+        //call API
+        $.ajax({
+            url: "./service/insert.php",
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({
+                "name": $("#name").val() || "",
+                "surename": $("#surename").val() || "",
+                "sex": $("input[name='sex']:checked").val() || "",
+                "birthdtm": $('#birthdtm').val() || "",
+                "email": $('#email').val() || "",
+                "address": $('#address').val() || "",
+                "telephone": $('#telephone').val() || "",
+            }),
+            headers: {
+                'Token': 'xxxxxxxxx',
+                'Content-Type': 'application/json',
+            }
+        }).done(function (result) {
+            console.log("result : ", result);
+            $("form").trigger("reset");
+            $("#resultAPI").html(JSON.stringify(result));
+            alert(result.description);
+        }).fail(function (jqXHR, textStatus) {
+            console.log("result : ", jqXHR.responseText);
+            $("#resultAPI").html(jqXHR.responseText);
+            alert(JSON.parse(jqXHR.responseText).description);
+        });
+
+        event.preventDefault();
+    });
+</script>
